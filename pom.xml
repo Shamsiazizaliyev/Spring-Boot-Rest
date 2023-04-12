@@ -8,7 +8,7 @@
         <version>2.7.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>az.orient.com</groupId>
+    <groupId>az.example.com</groupId>
     <artifactId>spring-rest</artifactId>
     <version>1.0.0</version>
     <name>spring-rest</name>
