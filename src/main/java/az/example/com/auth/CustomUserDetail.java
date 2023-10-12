@@ -1,3 +1,4 @@
+
 package az.example.com.auth;
 
 
@@ -67,3 +68,4 @@ public class CustomUserDetail implements UserDetails {
         return true;
     }
 }
+

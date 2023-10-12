@@ -2,11 +2,13 @@ package az.example.com.service;
 
 import az.example.com.dto.EmployeeDto;
 import az.example.com.response.EmployeeResponse;
+import az.example.com.response.PageResponse;
 
 public interface EmployeeService {
 
 
-    EmployeeResponse getEmployeeResponse();
+    PageResponse getEmployeeResponse(int page, int count);
+
 
     EmployeeDto getEmployee(Long id);
 

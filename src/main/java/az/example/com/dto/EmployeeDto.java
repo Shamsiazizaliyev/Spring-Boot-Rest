@@ -1,14 +1,14 @@
 package az.example.com.dto;
 
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -19,12 +19,13 @@ public class EmployeeDto {
 
 
     @NotBlank(message = "ad daxil edin")
-    @Size(min = 3,message = "3 herfden yuxari den yuxari daxil edin")
     private String name;
 
 
     @NotBlank(message = "soyad daxil edin")
     private String surname;
+
+
 
 
 

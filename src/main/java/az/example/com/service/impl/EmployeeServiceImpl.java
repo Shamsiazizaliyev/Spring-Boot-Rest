@@ -3,12 +3,17 @@ package az.example.com.service.impl;
 import az.example.com.dto.EmployeeDto;
 import az.example.com.enums.ErrorCodeEnum;
 import az.example.com.exception.CustomNotFoundException;
+
+import az.example.com.mapper.EmployeMapper;
 import az.example.com.model.Employee;
 import az.example.com.repository.EmployeeRepository;
 import az.example.com.response.EmployeeResponse;
+import az.example.com.response.PageResponse;
 import az.example.com.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,22 +28,41 @@ import java.util.stream.Collectors;
 public class EmployeeServiceImpl implements EmployeeService {
 
 
+
     private  final EmployeeRepository repository;
+     private  final EmployeMapper mapper;
     @Override
-    public EmployeeResponse getEmployeeResponse() {
+    public PageResponse getEmployeeResponse(int page, int count) {
+
 
 
       /*  Sort sort = Sort.by(Sort.Order.asc("name"));
         PageRequest pageRequest=PageRequest.of(0,5, sort);
         repository.findAll(pageRequest);*/
 
-       List<EmployeeDto>employeeDtolIST=  repository.findAll()
+         Page<Employee> all = repository.findAll(PageRequest.of(page, count));
+
+       /* List<EmployeeDto>employeeDtolIST=  all.getContent()
                 .stream()
-                .map(employee -> convertToDto(employee))
+                .map(employee -> mapper.toEmployeeDto(employee))
                 .collect(Collectors.toList());
 
 
-       return EmployeeResponse.builder().employees(employeeDtolIST).build();
+      return EmployeeResponse.builder().employees(employeeDtolIST).build();
+                */
+
+
+        return new PageResponse(
+                all.getContent()
+                .stream()
+                .map(employee -> mapper.toEmployeeDto(employee))
+                .collect(Collectors.toList()),
+                all.getTotalElements(),
+                all.getTotalPages(),
+                all.hasNext()
+
+        );
+
 
 
     }
@@ -50,7 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Supplier<CustomNotFoundException> c=()->{ return
                 new CustomNotFoundException(ErrorCodeEnum.EMPLOYYE_NOT_FOUND);};
 
-        return repository.findById(id).map(employee -> convertToDto(employee))
+        return repository.findById(id).map(employee -> mapper.toEmployeeDto(employee))
                 .orElseThrow(c);
     }
 
@@ -72,11 +96,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void insert(EmployeeDto employeeDto) {
 
-         Employee em=new Employee();
 
-         BeanUtils.copyProperties(employeeDto,em);
+
+
+         Employee em= mapper.toEmployee(employeeDto);
+
+      //   BeanUtils.copyProperties(employeeDto,em);
          repository.save(em);
-
 
 
 
